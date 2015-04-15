@@ -5,7 +5,7 @@ module ChinaSMS
     module Luosimao
       extend self
 
-      URL = "https://sms-api.luosimao.com/v1/send.json"
+      URL = "http://sms-api.luosimao.com/v1/send.json"
 
       def to(phone, content, options)
         url = URI.parse(URL)
@@ -14,7 +14,7 @@ module ChinaSMS
         post.set_form_data({mobile: phone, message: content})
 
         socket = Net::HTTP.new(url.host, url.port)
-        socket.use_ssl = true
+        socket.use_ssl = true if url.scheme.downcase == "https"
         response = socket.start {|http| http.request(post) }
         result JSON.parse(response.body)
       end
